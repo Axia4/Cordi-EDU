@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Nueva aula</h2>
+<form method="POST">
+    <fieldset class="mb-3 border border-secondary rounded-3 p-3 border-5">
+        <legend>Información del aula</legend>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.nombre.label(class="form-label") }}
+            {{ form.nombre(class="form-control", placeholder="Nombre del aula", size=32) }}
+        </div>
+        <div class="mb-3">
+            {{ form.centro_id.label(class="form-label") }}
+            {{ form.centro_id(class="form-select") }}
+        </div>
+        <input type="submit" value="Crear aula" class="btn btn-primary">
+    </fieldset>
+</form>
+{% endblock %}

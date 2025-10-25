@@ -1,0 +1,22 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Editar aula</h2>
+<form method="POST">
+    <fieldset class="mb-3 border border-secondary rounded-3 p-3 border-5">
+        <legend>Información del aula</legend>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.nombre.label(class="form-label") }}
+            {{ form.nombre(class="form-control", placeholder="Nombre del aula", size=32) }}
+        </div>
+        <div class="mb-3">
+            {{ form.centro_id.label(class="form-label") }}
+            {{ form.centro_id(class="form-select") }}
+        </div>
+        {{ actionbutton_form('Guardar cambios', 'submit', 'mdi-content-save', 'btn-primary') }}
+        {{ actionbutton('Borrar aula', url_for('aulas.borrar', aula_id=aula_id), 'mdi-delete', 'btn-danger') }}
+        {{ actionbutton('Cancelar', url_for('aulas.detalle', aula_id=aula_id), 'mdi-cancel', 'btn-light') }}
+    </fieldset>
+</form>
+{% endblock %}

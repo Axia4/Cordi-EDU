@@ -1,0 +1,14 @@
+{% macro actionbutton(name, url, icon, class) %}
+{# This macro generates an action button #}
+<button type="button" class="btn {{ class }}" style="font-size: 17.5px; font-weight: bold;" onclick="location.href='{{ url }}'">
+    <span class="iconify" data-icon="{{ icon }}" data-inline="false" style="width: 64px; height: 64px;"></span><br>
+    {{ name }}
+</button>
+{% endmacro %}
+{% macro actionbutton_form(name, type, icon, class) %}
+{# This macro generates an action button #}
+<button type="{{ type }}" class="btn {{ class }}" style="font-size: 17.5px; font-weight: bold;">
+    <span class="iconify" data-icon="{{ icon }}" data-inline="false" style="width: 64px; height: 64px;"></span><br>
+    {{ name }}
+</button>
+{% endmacro %}

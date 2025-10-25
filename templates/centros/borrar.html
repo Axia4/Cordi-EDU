@@ -1,0 +1,17 @@
+{# borrar.html #}
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Eliminar centro educativo</h2>
+<form method="POST">
+    <p>¿Estás seguro de que deseas eliminar este centro educativo?</p>
+    <div class="mb-3">
+        <strong>Centro:</strong> {{ centro_id }}
+        <br><strong>Nombre:</strong> {{ centro.nombre }}
+    </div>
+    <div class="d-flex">
+        {{ actionbutton('Cancelar', url_for('centros.detalle', centro_id=centro_id), 'mdi-cancel', 'btn-light') }}
+        {{ actionbutton_form('Eliminar este centro', 'submit', 'mdi-delete', 'btn-danger') }}
+    </div>
+</form>
+{% endblock %}

@@ -2,3 +2,5 @@ flask
 Flask-bootstrap
 flask-nav
 Flask-WTF
+Flask-SQLAlchemy
+Flask-Migrate

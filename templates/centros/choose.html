@@ -1,0 +1,12 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Seleccionar Centro Educativo</h2>
+{% if centros|length == 0 %}
+<p>No hay centros educativos disponibles.</p>
+{% else %}
+{% for centro in centros %}
+{{ actionbutton(centro.nombre, url_for('centros.select', centro_id=centro.uuid, next=url_for('aulas.choose')), 'mdi-school', 'btn-dark') }}
+{% endfor %}
+{% endif %}
+{% endblock %}

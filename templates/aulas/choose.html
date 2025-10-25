@@ -1,0 +1,12 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Seleccionar Aula de <b>{{ session.get('CentroActualName', 'Centro Desconocido') }}</b></h2>
+{% if aulas|length == 0 %}
+<p>No hay aulas disponibles.</p>
+{% else %}
+{% for aula in aulas %}
+{{ actionbutton(aula.nombre, url_for('aulas.select', aula_id=aula.uuid, next=url_for('index')), 'mdi-door', 'btn-dark') }}
+{% endfor %}
+{% endif %}
+{% endblock %}

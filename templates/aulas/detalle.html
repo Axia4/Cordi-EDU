@@ -1,0 +1,18 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Aula: <b>{{ aula.nombre }}</b></h2>
+<ul class="list-group mb-3">
+    <li class="list-group-item"><strong>Centro:</strong> {{ centro.nombre }}</li>
+    <li class="list-group-item"><strong>Dirección del centro:</strong> {{ centro.direccion }}</li>
+    <li class="list-group-item"><strong>Teléfono del centro:</strong> {{ centro.telefono }}</li>
+    <li class="list-group-item"><strong>Email del centro:</strong> {{ centro.email }}</li>
+</ul>
+
+<!-- Botones de acción -->
+<div class="mt-3">
+    {{ actionbutton('Cambiar datos', url_for('aulas.editar', aula_id=aula_id), 'mdi-pencil', 'btn-warning') }}
+    {{ actionbutton('Ver centro', url_for('centros.detalle', centro_id=centro.uuid), 'mdi-school', 'btn-info') }}
+    {{ actionbutton('Volver a la lista', url_for('aulas.index'), 'mdi-arrow-left', 'btn-light') }}
+</div>
+{% endblock %}

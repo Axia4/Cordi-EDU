@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Aulas</h2>
+{{ actionbutton('Añadir nueva aula', url_for('aulas.nuevo'), 'mdi-plus-circle', 'btn-success') }}
+
+{% if aulas_by_centro|length == 0 %}
+<p>No hay aulas disponibles.</p>
+{% else %}
+{% for centro_nombre, centro_data in aulas_by_centro.items() %}
+<h3 style="margin-top: 20px;"><b>{{ centro_nombre }}</b></h3>
+{% for aula in centro_data.aulas %}
+{{ actionbutton(aula.nombre, url_for('aulas.detalle', aula_id=aula.uuid), 'mdi-door', 'btn-dark') }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endblock %}

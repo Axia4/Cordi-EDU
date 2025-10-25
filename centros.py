@@ -1,9 +1,11 @@
-from helpers import DATA_DIR, list_items, read_json_file, save_json_file, create_directory
+from helpers import DATA_DIR
 import uuid
-from flask import Blueprint, render_template, request, redirect, url_for, session, g
+from flask import Blueprint, flash, render_template, request, redirect, url_for, session, g, current_app
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
+from models import Centro, db
+
 centros = Blueprint('centros', __name__, url_prefix='/centros')
 
 class CentroForm(FlaskForm):
@@ -14,38 +16,75 @@ class CentroForm(FlaskForm):
 
 @centros.route('/')
 def index():
-    centros = list_items('Centros')
-    return render_template('centros/index.html', centros=centros)
+    # list all centros from DB
+    centros_q = Centro.query.order_by(Centro.nombre.asc()).all()
+    print("Centros found:", centros_q)
+    return render_template('centros/index.html', centros=centros_q)
 
 @centros.route('/<centro_id>')
 def detalle(centro_id):
-    centro_data = DATA_DIR / 'Centros' / centro_id / '_data.json'
-    centro_info = read_json_file(centro_data)
-    return render_template('centros/detalle.html', centro=centro_info, centro_id=centro_id)
+    centro = Centro.query.filter_by(uuid=centro_id).first()
+    if not centro:
+        return redirect(url_for('centros.index'))
+    return render_template('centros/detalle.html', centro=centro.to_dict(), centro_id=centro.uuid)
 
-@centros.route('/select/<centro_id>')
+@centros.route('/<centro_id>/select')
 def select(centro_id):
-    centro_data = DATA_DIR / 'Centros' / centro_id / '_data.json'
-    centro_info = read_json_file(centro_data)
-    if centro_info:
-        session['CentroActual'] = centro_id
-        session['CentroActualName'] = centro_id
-    return redirect(url_for('index'))
+    next_redirect = request.args.get('next', url_for('index'))
+    centro = Centro.query.filter_by(uuid=centro_id).first()
+    if centro:
+        session['CentroActual'] = centro.uuid
+        session['CentroActualName'] = centro.nombre
+    return redirect(next_redirect)
+
+@centros.route('/choose')
+def choose():
+    centros_q = Centro.query.order_by(Centro.nombre.asc()).all()
+    return render_template('centros/choose.html', centros=centros_q)
+
+@centros.route('/<centro_id>/edit', methods=['GET', 'POST'])
+def editar(centro_id):
+    centro = Centro.query.filter_by(uuid=centro_id).first()
+    if not centro:
+        flash('Centro no encontrado.', 'warning')
+        return redirect(url_for('centros.index'))
+    form = CentroForm(obj=centro)
+    if form.validate_on_submit():
+        centro.nombre = form.nombre.data
+        centro.direccion = form.direccion.data or ''
+        centro.telefono = form.telefono.data or ''
+        centro.email = form.email.data or ''
+        db.session.commit()
+        return redirect(url_for('centros.detalle', centro_id=centro.uuid))
+    return render_template('centros/editar.html', form=form, centro_id=centro.uuid)
 
 @centros.route('/new', methods=['GET', 'POST'])
 def nuevo():
     form = CentroForm()
     if form.validate_on_submit():
-        nuevo_centro = {
-            'Nombre': form.nombre.data,
-            'Dirección': form.direccion.data,
-            'Teléfono': {"Principal": form.telefono.data} if form.telefono.data else {},
-            'Correo electrónico': {"Principal": form.email.data} if form.email.data else {}
-        }
-        # Crear carpeta y guardar datos en _data.json
         centro_id = str(uuid.uuid4())
-        centro_dir = DATA_DIR / 'Centros' / centro_id
-        create_directory(centro_dir)
-        save_json_file(centro_dir / '_data.json', nuevo_centro)
+        telefono = form.telefono.data or ''
+        email = form.email.data or ''
+        nuevo = Centro(uuid=centro_id, nombre=form.nombre.data, direccion=form.direccion.data or '', telefono=telefono, email=email)
+        db.session.add(nuevo)
+        db.session.commit()
+        flash('Centro creado correctamente.', 'success')
         return redirect(url_for('centros.index'))
     return render_template('centros/nuevo.html', form=form)
+
+@centros.route('/<centro_id>/delete', methods=['GET', 'POST'])
+def borrar(centro_id):
+    if request.method == 'GET':
+        centro = Centro.query.filter_by(uuid=centro_id).first()
+        if not centro:
+            flash('Centro no encontrado.', 'warning')
+            return redirect(url_for('centros.index'))
+        return render_template('centros/borrar.html', centro_id=centro_id, centro=centro.to_dict())
+    centro = Centro.query.filter_by(uuid=centro_id).first()
+    if not centro:
+        flash('Centro no encontrado.', 'danger')
+        return redirect(url_for('centros.index'))
+    db.session.delete(centro)
+    db.session.commit()
+    flash('Centro eliminado correctamente.', 'success')
+    return redirect(url_for('centros.index'))
