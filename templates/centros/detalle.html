@@ -1,0 +1,22 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Centro educativo: {{ centro.nombre }}</h2>
+<ul class="list-group mb-3">
+    <li class="list-group-item"><strong>Dirección:</strong> {{ centro.direccion }}</li>
+    <li class="list-group-item"><strong>Teléfono:</strong> {{ centro.telefono }}</li>
+    <li class="list-group-item"><strong>Email (pulsa para ver):</strong>
+        {% for key, value in centro.email.items() %}
+        <span class="badge bg-primary" style="cursor: pointer;" onclick="alert('Correo electronico: {{ value }}')"><b>{{
+                key }}</b></span>
+        {% endfor %}
+    </li>
+</ul>
+
+<!-- Botones de acción -->
+<div class="mt-3">
+    <a href="{{ url_for('centros.select', centro_id=centro_id) }}" class="btn btn-primary">Establecer como centro
+        actual</a>
+    <a href="{{ url_for('centros.index') }}" class="btn btn-secondary">Volver a la lista de centros</a>
+</div>
+{% endblock %}

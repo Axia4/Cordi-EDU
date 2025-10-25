@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Centros educativos</h2>
+<a class="card text-white" href="{{ url_for('centros.nuevo') }}"
+    style="text-decoration: none; margin: 5px; width: 200px; height: 200px; display: inline-block; text-align: center; vertical-align: middle; background-color: #169016;">
+    <div class="card-body">
+        <span class="iconify" data-icon="mdi-add-box" data-inline="false" style="width: 100px; height: 100px;"></span>
+        <h4 class="card-title">Nuevo centro</h4>
+    </div>
+</a>
+{% for centro_name in centros %}
+<a class="card text-white" href="{{ url_for('centros.detalle', centro_id=centro_name) }}"
+    style="text-decoration: none; margin: 5px; width: 200px; height: 200px; display: inline-block; text-align: center; vertical-align: middle; background-color: #171717;">
+    <div class="card-body" style="vertical-align: middle; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+        <h4 class="card-title" style="vertical-align: middle; display: flex; justify-content: center;">{{ centro_name }}</h4>
+    </div>
+</a>
+{% endfor %}
+{% endblock %}

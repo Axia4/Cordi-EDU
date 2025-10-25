@@ -1,0 +1,28 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Nuevo centro educativo</h2>
+<form method="POST">
+    <fieldset class="mb-3 border border-secondary rounded-3 p-3 border-5">
+        <legend>Información del centro</legend>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.nombre.label(class="form-label") }}
+            {{ form.nombre(class="form-control", placeholder="Nombre del centro educativo", size=32) }}
+        </div>
+        <div class="mb-3">
+            {{ form.direccion.label(class="form-label") }}
+            {{ form.direccion(class="form-control", placeholder="Dirección del centro educativo", size=64) }}
+        </div>
+        <div class="mb-3">
+            {{ form.telefono.label(class="form-label") }}
+            {{ form.telefono(class="form-control", placeholder="Teléfono del centro educativo", size=32) }}
+        </div>
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="Correo electrónico del centro educativo", size=64) }}
+        </div>
+        <input type="submit" value="Crear centro" class="btn btn-primary">
+    </fieldset>
+</form>
+{% endblock %}

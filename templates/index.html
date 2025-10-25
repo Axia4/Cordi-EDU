@@ -1,0 +1,47 @@
+{% extends '_base.html' %}
+
+{% block content %}
+{# colors from https://flatuicolors.com/palette/defo #}
+<h2>Datos base</h2>
+<a class="card text-white" href="{{ url_for('centros.index') }}"
+    style="text-decoration: none; margin: 5px; width: 200px; height: 200px; display: inline-block; text-align: center; vertical-align: middle; background-color: #3498db;">
+    <div class="card-body">
+        <span class="iconify" data-icon="mdi-school" data-inline="false" style="width: 100px; height: 100px;"></span>
+        <h4 class="card-title">Centros educativos</h4>
+    </div>
+</a>
+
+<a class="card text-white" href="{{ url_for('index') }}"
+    style="text-decoration: none; margin: 5px; width: 200px; height: 200px; display: inline-block; text-align: center; vertical-align: middle; background-color: #1abc9c;">
+    <div class="card-body">
+        <span class="iconify" data-icon="mdi-google-classroom" data-inline="false" style="width: 100px; height: 100px;"></span>
+        <h4 class="card-title">Aulas</h4>
+    </div>
+</a>
+
+<a class="card text-white" href="{{ url_for('index') }}"
+    style="text-decoration: none; margin: 5px; width: 200px; height: 200px; display: inline-block; text-align: center; vertical-align: middle; background-color: #2ecc71;">
+    <div class="card-body">
+        <span class="iconify" data-icon="mdi-account" data-inline="false" style="width: 100px; height: 100px;"></span>
+        <h4 class="card-title">Alumnxs</h4>
+    </div>
+</a>
+
+
+<h2 class="mt-5">Gestión</h2>
+<a class="card text-white" href="{{ url_for('index') }}"
+    style="text-decoration: none; margin: 5px; width: 200px; height: 200px; display: inline-block; text-align: center; vertical-align: middle; background-color: #9b59b6;">
+    <div class="card-body">
+        <span class="iconify" data-icon="mdi-box-variant" data-inline="false" style="width: 100px; height: 100px;"></span>
+        <h4 class="card-title">Materiales</h4>
+    </div>
+</a>
+
+<a class="card text-white" href="{{ url_for('index') }}"
+    style="text-decoration: none; margin: 5px; width: 200px; height: 200px; display: inline-block; text-align: center; vertical-align: middle; background-color: #e67e22;">
+    <div class="card-body">
+        <span class="iconify" data-icon="mdi-calendar" data-inline="false" style="width: 100px; height: 100px;"></span>
+        <h4 class="card-title">Actividades</h4>
+    </div>
+</a>
+{% endblock %}

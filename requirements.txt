@@ -1,0 +1,4 @@
+flask
+Flask-bootstrap
+flask-nav
+Flask-WTF

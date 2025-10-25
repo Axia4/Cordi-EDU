@@ -1,0 +1,21 @@
+{% macro nav_button(name, endpoint, icon) %}
+{# This macro generates a navigation button for the navbar #}
+{# The current endpoint is set to g.NAV_ENDPOINT in the view functions #}
+{# The svg icon color changes based on whether it's the active page #}
+{% if endpoint == g.NAV_ENDPOINT %}
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for(endpoint) }}">
+            <span class="iconify" data-icon="{{ icon }}" data-inline="false" style="width: 20px; height: 20px;"></span>
+            {{ name }}
+            <span class="visually-hidden">(abierto)</span>
+        </a>
+    </li>
+{% else %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for(endpoint) }}">
+            <span class="iconify" data-icon="{{ icon }}" data-inline="false" style="width: 20px; height: 20px;"></span>
+            {{ name }}
+        </a>
+    </li>
+{% endif %}
+{% endmacro %}
