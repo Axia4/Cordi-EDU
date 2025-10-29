@@ -1,31 +1,45 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from flask_security import UserMixin, RoleMixin
 
 db = SQLAlchemy()
 
-class Roles(db.Model):
+# Association table for many-to-many relationship between User and Roles
+user_roles = db.Table('user_roles',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+)
+
+class Roles(db.Model, RoleMixin):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
+    description = db.Column(db.String(255))
     permissions = db.Column(db.String(1024))
 
     def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
+            'description': self.description,
             'permissions': self.permissions,
         }
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
-    is_active = db.Column(db.Boolean, default=True)
-    password_hash = db.Column(db.String(255))
-    last_login = db.Column(db.DateTime)
+    active = db.Column(db.Boolean, default=True)
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
+    confirmed_at = db.Column(db.DateTime)
+    last_login_at = db.Column(db.DateTime)
+    current_login_at = db.Column(db.DateTime)
+    last_login_ip = db.Column(db.String(50))
+    current_login_ip = db.Column(db.String(50))
+    login_count = db.Column(db.Integer)
     # List of roles assigned to the user
-    roles = db.relationship('Roles', secondary='user_roles', backref=db.backref('users', lazy='dynamic'))
+    roles = db.relationship('Roles', secondary=user_roles, backref=db.backref('users', lazy='dynamic'))
     default_aula = db.Column(db.String(36), db.ForeignKey('aulas.uuid'), nullable=True)
 
     def to_dict(self):
@@ -33,8 +47,8 @@ class User(db.Model):
             'id': self.id,
             'email': self.email,
             'name': self.name,
-            'is_active': self.is_active,
-            'last_login': self.last_login,
+            'active': self.active,
+            'last_login_at': self.last_login_at,
             'roles': [role.to_dict() for role in self.roles],
             'default_aula': self.default_aula,
         }

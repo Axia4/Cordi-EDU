@@ -4,4 +4,8 @@ flask-nav
 Flask-WTF
 Flask-SQLAlchemy
 Flask-Migrate
-Flask-login
+Flask-Security-Too
+email-validator
+passlib
+bcrypt
+argon2_cffi
