@@ -37,14 +37,11 @@
                     {{ nav_button('Actividades', 'index', 'mdi-calendar') }}
                 </ul>
                 <div class="d-flex">
-                    <span class="navbar-text text-white ms-3">
+                    <a class="navbar-text text-white" href="{{ url_for('centros.choose') }}">
                         Centro: <strong>{{ g.CentroActualName if g.CentroActual else 'Ninguno' }}</strong>
-
-                    </span>
-                    <span class="navbar-text text-white ms-3">
+                        <br>
                         Aula: <strong>{{ g.AulaActualName if g.AulaActual else 'Ninguna' }}</strong>
-                    </span>
-                    <a class="btn btn-light ms-3" href="{{ url_for('centros.choose') }}">Establecer ubicación</a>
+                    </a>
                 </div>
             </div>
         </div>

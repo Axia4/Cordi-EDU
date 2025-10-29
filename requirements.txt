@@ -4,3 +4,4 @@ flask-nav
 Flask-WTF
 Flask-SQLAlchemy
 Flask-Migrate
+Flask-login

@@ -1,25 +1,30 @@
 from flask import Flask, render_template, request, g, redirect, url_for, session, flash
+from flask_login import LoginManager
 from helpers import DATA_DIR
 from models import db
-from flask_migrate import Migrate
 import os
 import os
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-for-dev')
+
+login_manager = LoginManager(app)
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
+
 
 # Ensure DATA_DIR exists and create sqlite file path
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 db_path = DATA_DIR / 'db.sqlite3'
 # Use absolute path for SQLite on Windows
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path.absolute().as_posix()}"
-print("Using database at:", app.config['SQLALCHEMY_DATABASE_URI'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # init extensions
+# print("Using database at:", app.config['SQLALCHEMY_DATABASE_URI'])
 db.init_app(app)
-migrate = Migrate(app, db)
 
 @app.before_request
 def before_request():
