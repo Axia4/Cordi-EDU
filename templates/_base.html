@@ -32,9 +32,9 @@
                     {{ nav_button('Inicio', 'index', 'mdi-home') }}
                     {{ nav_button('Centros', 'centros.index', 'mdi-school') }}
                     {{ nav_button('Aulas', 'aulas.index', 'mdi-google-classroom') }}
+                    {{ nav_button('Actividades', 'actividades.index', 'mdi-calendar-clock') }}
                     {{ nav_button('Alumnxs', 'index', 'mdi-account') }}
                     {{ nav_button('Materiales', 'index', 'mdi-box-variant') }}
-                    {{ nav_button('Actividades', 'index', 'mdi-calendar') }}
                 </ul>
                 <div class="d-flex">
                     <a class="navbar-text text-white" href="{{ url_for('centros.choose') }}">
@@ -48,6 +48,8 @@
         ¡Hola, {{ current_user.name }}!
         · Centro: <strong>{{ g.CentroActualName if g.CentroActual else 'Ninguno' }}</strong>
         · Aula: <strong>{{ g.AulaActualName if g.AulaActual else 'Ninguna' }}</strong>
+        · <a href="{{ url_for('centros.choose') }}" class="text-white">Establecer ubicación</a>
+        · <a href="{{ url_for('security.logout') }}" class="text-white">Cerrar sesión</a>
     </p>
     <div class="container mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}

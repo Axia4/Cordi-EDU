@@ -1,0 +1,111 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Editar Actividad</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.nombre.label(class="form-label") }}
+                        {{ form.nombre(class="form-control") }}
+                        {% if form.nombre.errors %}
+                            <div class="text-danger">
+                                {% for error in form.nombre.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.descripcion.label(class="form-label") }}
+                        {{ form.descripcion(class="form-control", rows="3") }}
+                        {% if form.descripcion.errors %}
+                            <div class="text-danger">
+                                {% for error in form.descripcion.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.fecha_hora_inicio.label(class="form-label") }}
+                                {{ form.fecha_hora_inicio(class="form-control") }}
+                                {% if form.fecha_hora_inicio.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.fecha_hora_inicio.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.fecha_hora_fin.label(class="form-label") }}
+                                {{ form.fecha_hora_fin(class="form-control") }}
+                                {% if form.fecha_hora_fin.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.fecha_hora_fin.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.aulas.label(class="form-label") }}
+                        <div class="border p-3" style="max-height: 300px; overflow-y: auto;">
+                            {% if form.aulas_grouped %}
+                                {% for centro_name, aulas_list in form.aulas_grouped.items() %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary border-bottom pb-1">{{ centro_name }}</h6>
+                                        {% for aula in aulas_list %}
+                                            <div class="form-check ms-3">
+                                                <input class="form-check-input" type="checkbox" name="aulas" value="{{ aula.id }}" id="aula_{{ aula.id }}" {% if aula.selected %}checked{% endif %}>
+                                                <label class="form-check-label" for="aula_{{ aula.id }}">
+                                                    {{ aula.nombre }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% for choice in form.aulas %}
+                                    <div class="form-check">
+                                        {{ choice(class="form-check-input") }}
+                                        {{ choice.label(class="form-check-label") }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        {% if form.aulas.errors %}
+                            <div class="text-danger">
+                                {% for error in form.aulas.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-warning">Actualizar Actividad</button>
+                        <a href="{{ url_for('actividades.detalle', actividad_id=actividad_id) }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Calendario de Actividades</h2>
+    {{ actionbutton('Añadir nueva actividad', url_for('actividades.nuevo'), 'mdi-plus-circle', 'btn-success') }}
+</div>
+
+<!-- Calendar Navigation -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ url_for('actividades.index', year=prev_month.year, month=prev_month.month) }}" 
+               class="btn btn-outline-primary">
+                <span class="iconify" data-icon="mdi:chevron-left" data-inline="true"></span> {{ prev_month.strftime('%B %Y') }}
+            </a>
+            
+            <h3 class="mb-0">{{ current_month.strftime('%B %Y') }}</h3>
+            
+            <a href="{{ url_for('actividades.index', year=next_month.year, month=next_month.month) }}" 
+               class="btn btn-outline-primary">
+                {{ next_month.strftime('%B %Y') }} <span class="iconify" data-icon="mdi:chevron-right" data-inline="true"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Calendar Grid -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center">Lunes</th>
+                                <th class="text-center">Martes</th>
+                                <th class="text-center">Miércoles</th>
+                                <th class="text-center">Jueves</th>
+                                <th class="text-center">Viernes</th>
+                                <th class="text-center">Sábado</th>
+                                <th class="text-center">Domingo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for week in calendar_days %}
+                            <tr>
+                                {% for day in week %}
+                                <td class="calendar-day p-2 position-relative {% if not day.is_current_month %}text-muted bg-light{% endif %} {% if day.is_today %}border-primary border-2{% endif %}" 
+                                    style="height: 120px; vertical-align: top; min-width: 120px;">
+                                    
+                                    <!-- Date number -->
+                                    <div class="fw-bold {% if day.is_today %}text-primary{% endif %}">
+                                        {{ day.date.day }}
+                                    </div>
+                                    
+                                    <!-- Activities for this day -->
+                                    {% if day.activities %}
+                                        <div class="mt-1">
+                                            {% for actividad in day.activities[:3] %}
+                                            <div class="small mb-1">
+                                                <a href="{{ url_for('actividades.detalle', actividad_id=actividad.uuid) }}" 
+                                                   class="text-decoration-none">
+                                                    <div class="badge bg-primary text-wrap w-100 text-start p-1" 
+                                                         style="font-size: 0.7em; white-space: normal;">
+                                                        <span class="iconify" data-icon="mdi:clock-outline" data-inline="true"></span> 
+                                                        {{ actividad.fecha_hora_inicio.strftime('%H:%M') }}
+                                                        <br>
+                                                        {{ actividad.nombre[:20] }}{% if actividad.nombre|length > 20 %}...{% endif %}
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            {% endfor %}
+                                            
+                                            {% if day.activities|length > 3 %}
+                                            <div class="small text-muted">
+                                                +{{ day.activities|length - 3 }} más
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Add activity button for current month days -->
+                                    {% if day.is_current_month %}
+                                    <div class="position-absolute bottom-0 end-0 p-1">
+                                        <a href="{{ url_for('actividades.nuevo') }}?date={{ day.date.strftime('%Y-%m-%d') }}" 
+                                           class="btn btn-outline-success btn-sm opacity-50 hover-opacity-100" 
+                                           style="font-size: 0.7em;">
+                                            <span class="iconify" data-icon="mdi:add" data-inline="true"></span>
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile View - List for small screens -->
+<div class="d-md-none mt-4">
+    <h4>Actividades del mes</h4>
+    {% set month_activities = [] %}
+    {% for day in calendar_days %}
+        {% for day_info in day %}
+            {% if day_info.is_current_month and day_info.activities %}
+                {% set _ = month_activities.extend(day_info.activities) %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    
+    {% if month_activities %}
+        {% for actividad in month_activities %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <h6 class="card-title">{{ actividad.nombre }}</h6>
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="mdi mdi-calendar"></i> {{ actividad.fecha_hora_inicio.strftime('%d/%m/%Y') }}
+                        <i class="mdi mdi-clock"></i> {{ actividad.fecha_hora_inicio.strftime('%H:%M') }} - {{ actividad.fecha_hora_fin.strftime('%H:%M') }}
+                    </small>
+                </p>
+                <a href="{{ url_for('actividades.detalle', actividad_id=actividad.uuid) }}" 
+                   class="btn btn-primary btn-sm">Ver detalles</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No hay actividades este mes.</p>
+    {% endif %}
+</div>
+
+<style>
+.calendar-day:hover .hover-opacity-100 {
+    opacity: 1 !important;
+}
+
+.calendar-day {
+    transition: background-color 0.2s;
+}
+
+.calendar-day:hover {
+    background-color: rgba(0, 123, 255, 0.05) !important;
+}
+
+@media (max-width: 768px) {
+    .table-responsive table {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .d-md-none {
+        display: none !important;
+    }
+}
+</style>
+
+{% endblock %}

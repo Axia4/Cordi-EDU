@@ -97,3 +97,33 @@ class Aula(db.Model):
             'nombre': self.nombre,
             'centro_id': self.centro_id,
         }
+activity_aulas = db.Table('actividad_aulas',
+    db.Column('actividad_id', db.Integer, db.ForeignKey('actividades.id'), primary_key=True),
+    db.Column('aula_id', db.Integer, db.ForeignKey('aulas.id'), primary_key=True),
+    # Estado (aceptado, rechazado, pendiente, quizá)
+    db.Column('estado', db.String(20), default='pendiente'),
+    # Notas (opcional)
+    db.Column('notas', db.Text, nullable=True)
+)
+class Actividad(db.Model):
+    __tablename__ = 'actividades'
+    id = db.Column(db.Integer, primary_key=True)
+    uuid = db.Column(db.String(36), unique=True, nullable=False)
+    nombre = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    fecha_hora_inicio = db.Column(db.DateTime, nullable=False)
+    fecha_hora_fin = db.Column(db.DateTime, nullable=False)
+    descripcion = db.Column(db.Text)
+    aulas = db.relationship('Aula', secondary='actividad_aulas', backref=db.backref('actividades', lazy='dynamic'))
+    
+    def to_dict(self):
+        return {
+            'id': self.uuid,
+            'nombre': self.nombre,
+            'fecha_hora_inicio': self.fecha_hora_inicio.isoformat(),
+            'fecha_hora_fin': self.fecha_hora_fin.isoformat(),
+            'descripcion': self.descripcion or '',
+            'aulas': [aula.uuid for aula in self.aulas],
+        }

@@ -1,0 +1,46 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>{{ actividad.nombre }}</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Detalles de la Actividad</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> {{ actividad.nombre }}</p>
+                <p><strong>Descripción:</strong> {{ actividad.descripcion or 'Sin descripción' }}</p>
+                <p><strong>Fecha y Hora de Inicio:</strong> {{ actividad_obj.fecha_hora_inicio.strftime('%d/%m/%Y %H:%M') }}</p>
+                <p><strong>Fecha y Hora de Fin:</strong> {{ actividad_obj.fecha_hora_fin.strftime('%d/%m/%Y %H:%M') }}</p>
+                
+                <h6><strong>Aulas Asignadas:</strong></h6>
+                {% if actividad_obj.aulas %}
+                <ul>
+                    {% for aula in actividad_obj.aulas %}
+                    <li>{{ aula.nombre }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No hay aulas asignadas a esta actividad.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Acciones</h5>
+            </div>
+            <div class="card-body">
+                {{ actionbutton('Editar', url_for('actividades.editar', actividad_id=actividad_id), 'mdi-pencil', 'btn-warning') }}
+                {{ actionbutton('Eliminar', url_for('actividades.borrar', actividad_id=actividad_id), 'mdi-delete', 'btn-danger') }}
+                {{ actionbutton('Volver a la lista', url_for('actividades.index'), 'mdi-arrow-left', 'btn-secondary') }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

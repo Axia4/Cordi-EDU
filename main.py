@@ -43,6 +43,8 @@ def before_request():
     g.CentroActualName = session.get('CentroActualName', 'Ninguno')
     g.AulaActual = session.get('AulaActual', '') != ''
     g.AulaActualName = session.get('AulaActualName', 'Ninguna')
+    g.ActividadActual = session.get('ActividadActual', '') != ''
+    g.ActividadActualName = session.get('ActividadActualName', 'Ninguna')
     # ensure cart exists in session
     session.setdefault('cart', [])
 # --- routes ------------------------------------------------------------------
@@ -55,8 +57,10 @@ def index():
 # --- blueprints -------------------------------------------------------------
 from centros import centros
 from aulas import aulas
+from actividades import actividades
 app.register_blueprint(centros)
 app.register_blueprint(aulas)
+app.register_blueprint(actividades)
 
 @app.shell_context_processor
 def make_shell_context():

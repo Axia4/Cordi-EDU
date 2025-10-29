@@ -1,0 +1,27 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Seleccionar Actividad</h2>
+
+{% if actividades|length == 0 %}
+<p style="margin-top: 20px;">No hay actividades disponibles.</p>
+<a href="{{ url_for('actividades.nuevo') }}" class="btn btn-success">Crear nueva actividad</a>
+{% else %}
+{% for actividad in actividades %}
+<div style="margin-bottom: 10px;">
+    <a href="{{ url_for('actividades.select', actividad_id=actividad.uuid, next=request.args.get('next', url_for('index'))) }}" 
+       class="btn btn-outline-primary btn-lg d-block text-start">
+        <i class="mdi mdi-calendar-clock"></i> 
+        {{ actividad.nombre }}
+        <br>
+        <small class="text-muted">{{ actividad.fecha_hora_inicio.strftime('%d/%m/%Y %H:%M') }} - {{ actividad.fecha_hora_fin.strftime('%d/%m/%Y %H:%M') }}</small>
+    </a>
+</div>
+{% endfor %}
+{% endif %}
+
+<div style="margin-top: 30px;">
+    <a href="{{ request.args.get('next', url_for('index')) }}" class="btn btn-secondary">Cancelar</a>
+</div>
+
+{% endblock %}
